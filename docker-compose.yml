@@ -11,7 +11,7 @@ services:
       DB_URL: jdbc:postgresql://postgres:5432/crm
       DB_USER: crm
       DB_PASSWORD: crm
-      RABBITMQ_HOST: rabbitmq
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       REDIS_HOST: redis
       JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env before starting}
       SEED_CLIENT_USERNAME: ${SEED_CLIENT_USERNAME:?Set SEED_CLIENT_USERNAME in .env}
@@ -22,7 +22,7 @@ services:
       SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:?Set SEED_ADMIN_PASSWORD in .env}
     depends_on:
       postgres: {condition: service_healthy}
-      rabbitmq: {condition: service_started}
+      kafka: {condition: service_started}
       redis: {condition: service_started}
   postgres:
     image: postgres:16-alpine
@@ -33,9 +33,17 @@ services:
     ports: ["5432:5432"]
     volumes: [crm-data:/var/lib/postgresql/data]
     healthcheck: {test: ["CMD-SHELL", "pg_isready -U crm -d crm"], interval: 5s, timeout: 5s, retries: 10}
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-    ports: ["5672:5672", "15672:15672"]
+  kafka:
+    image: bitnami/kafka:3.8
+    environment:
+      KAFKA_CFG_NODE_ID: 1
+      KAFKA_CFG_PROCESS_ROLES: broker,controller
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      ALLOW_PLAINTEXT_LISTENER: yes
+    ports: ["9092:9092"]
   redis:
     image: redis:7-alpine
     ports: ["6379:6379"]
