@@ -1,0 +1,4 @@
+CREATE DATABASE crm_auth;
+CREATE DATABASE crm_customer;
+CREATE DATABASE crm_sales;
+CREATE DATABASE crm_task;

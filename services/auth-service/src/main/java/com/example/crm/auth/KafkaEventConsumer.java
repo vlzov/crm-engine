@@ -1,0 +1,1 @@
+package com.example.crm.auth; import org.springframework.kafka.annotation.KafkaListener; import org.springframework.stereotype.Component; @Component public class KafkaEventConsumer { @KafkaListener(topics="crm.events",groupId="auth-service") public void consume(String event){System.out.println("auth-service received: "+event);} }

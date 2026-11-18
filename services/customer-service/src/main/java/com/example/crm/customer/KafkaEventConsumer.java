@@ -1,0 +1,1 @@
+package com.example.crm.customer; import org.springframework.kafka.annotation.KafkaListener; import org.springframework.stereotype.Component; @Component public class KafkaEventConsumer { @KafkaListener(topics="crm.events",groupId="customer-service") public void consume(String event){System.out.println("customer-service received: "+event);} }
