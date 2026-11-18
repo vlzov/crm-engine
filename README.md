@@ -55,3 +55,15 @@ Seed-аккаунты для проверки ролей берутся из `.e
 Backend is organized under `services/`: `crm-service` is the running transitional API, while `auth-service`, `customer-service`, `sales-service` and `task-service` have independent `pom.xml` and `src` roots and are ready to receive their bounded contexts incrementally. PostgreSQL remains the source of truth; Redis is reserved for cache/session data and Kafka is the event backbone.
 
 RabbitMQ is not used in the current stack. Kafka is preferable here because CRM events (deal changes, task events, audit records) benefit from durable topics, consumer groups and replay. Redis handles low-latency cache and short-lived data; PostgreSQL owns transactional CRM data.
+
+### Frontend login accounts
+
+Для локального входа через `http://localhost:3000` используйте seed-аккаунты из `.env`:
+
+| Роль | Логин | Пароль |
+|---|---|---|
+| Клиент | `client` | значение `SEED_CLIENT_PASSWORD` |
+| Оператор | `operator` | значение `SEED_OPERATOR_PASSWORD` |
+| Администратор | `admin` | значение `SEED_ADMIN_PASSWORD` |
+
+Форма логина и регистрации показывается только на auth-экране. После успешного входа она полностью размонтируется; в рабочем интерфейсе остаётся только кнопка выхода.
