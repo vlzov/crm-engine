@@ -1,2 +1,0 @@
-package com.example.crm.sales; import org.springframework.stereotype.Component;
-@Component public class DealMapper { public DealDto toDto(Deal d){return new DealDto(d.getId(),d.getTitle(),d.getAmount(),d.getStage(),d.getCustomerId(),d.getCreatedAt());} public Deal toEntity(String t,java.math.BigDecimal a,java.util.UUID c){return new Deal(t,a,c);} public void update(Deal d,String t,java.math.BigDecimal a,java.util.UUID c){d.setTitle(t);d.setAmount(a);d.setCustomerId(c);} }

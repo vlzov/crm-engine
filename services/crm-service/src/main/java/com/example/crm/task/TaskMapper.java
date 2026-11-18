@@ -1,2 +1,0 @@
-package com.example.crm.task; import org.springframework.stereotype.Component; import java.time.LocalDate; import java.util.UUID;
-@Component public class TaskMapper {public TaskDto toDto(TaskItem t){return new TaskDto(t.getId(),t.getTitle(),t.getDueDate(),t.isCompleted(),t.getCustomerId(),t.getDealId());} public TaskItem toEntity(String t,LocalDate d,UUID c,UUID deal){return new TaskItem(t,d,c,deal);} public void update(TaskItem x,String t,LocalDate d,UUID c,UUID deal){x.setTitle(t);x.setDueDate(d);x.setCustomerId(c);x.setDealId(deal);}}

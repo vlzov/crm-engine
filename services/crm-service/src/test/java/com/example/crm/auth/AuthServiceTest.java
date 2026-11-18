@@ -1,8 +1,0 @@
-package com.example.crm.auth;
-import org.junit.jupiter.api.*; import org.mockito.*; import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; import static org.assertj.core.api.Assertions.*; import static org.mockito.Mockito.*; import java.time.*; import java.util.*;
-class AuthServiceTest { @Mock UserRepository users; @Mock RefreshTokenRepository tokens; JwtService jwt; AuthService service; UserAccount user;
- @BeforeEach void set(){MockitoAnnotations.openMocks(this);jwt=new JwtService("12345678901234567890123456789012",900);user=new UserAccount("operator",new BCryptPasswordEncoder().encode("secret"),Role.OPERATOR);service=new AuthService(users,tokens,new BCryptPasswordEncoder(),jwt);}
- @Test void loginIssuesAccessAndRefreshTokens(){when(users.findByUsername("operator")).thenReturn(Optional.of(user));when(tokens.save(any())).thenAnswer(i->i.getArgument(0));var out=service.login("operator","secret");assertThat(out).containsKeys("accessToken","refreshToken");verify(tokens).save(any(RefreshToken.class));}
- @Test void refreshRotatesToken(){var old=new RefreshToken("old",user,Instant.now().plusSeconds(60));when(tokens.findByTokenAndRevokedFalse("old")).thenReturn(Optional.of(old));when(tokens.save(any())).thenAnswer(i->i.getArgument(0));var out=service.refresh("old");assertThat(old.isRevoked()).isTrue();assertThat(out.get("refreshToken")).isNotEqualTo("old");}
- @Test void logoutRevokesToken(){var token=new RefreshToken("old",user,Instant.now().plusSeconds(60));when(tokens.findByTokenAndRevokedFalse("old")).thenReturn(Optional.of(token));service.logout("old");assertThat(token.isRevoked()).isTrue();verify(tokens).save(token);}
-}

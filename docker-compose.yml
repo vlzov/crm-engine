@@ -2,7 +2,19 @@ services:
   auth-service:
     restart: unless-stopped
     build: ./services/auth-service
-    environment: {KAFKA_BOOTSTRAP_SERVERS: kafka:9092, DB_URL: jdbc:postgresql://postgres:5432/crm_auth, DB_USER: crm, DB_PASSWORD: crm, PORT: 8080}
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      DB_URL: jdbc:postgresql://postgres:5432/crm_auth
+      DB_USER: crm
+      DB_PASSWORD: crm
+      PORT: 8080
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
+      SEED_CLIENT_USERNAME: ${SEED_CLIENT_USERNAME:?Set seed vars}
+      SEED_CLIENT_PASSWORD: ${SEED_CLIENT_PASSWORD:?Set seed vars}
+      SEED_OPERATOR_USERNAME: ${SEED_OPERATOR_USERNAME:?Set seed vars}
+      SEED_OPERATOR_PASSWORD: ${SEED_OPERATOR_PASSWORD:?Set seed vars}
+      SEED_ADMIN_USERNAME: ${SEED_ADMIN_USERNAME:?Set seed vars}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:?Set seed vars}
     ports: ["8081:8080"]
     depends_on:
       kafka: {condition: service_started}
@@ -35,27 +47,11 @@ services:
     build: ./frontend
     ports: ["3000:80"]
     depends_on:
-      app: {condition: service_started}
-  app:
-    build: .
-    ports: ["8080:8080"]
-    environment:
-      DB_URL: jdbc:postgresql://postgres:5432/crm
-      DB_USER: crm
-      DB_PASSWORD: crm
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      REDIS_HOST: redis
-      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env before starting}
-      SEED_CLIENT_USERNAME: ${SEED_CLIENT_USERNAME:?Set SEED_CLIENT_USERNAME in .env}
-      SEED_CLIENT_PASSWORD: ${SEED_CLIENT_PASSWORD:?Set SEED_CLIENT_PASSWORD in .env}
-      SEED_OPERATOR_USERNAME: ${SEED_OPERATOR_USERNAME:?Set SEED_OPERATOR_USERNAME in .env}
-      SEED_OPERATOR_PASSWORD: ${SEED_OPERATOR_PASSWORD:?Set SEED_OPERATOR_PASSWORD in .env}
-      SEED_ADMIN_USERNAME: ${SEED_ADMIN_USERNAME:?Set SEED_ADMIN_USERNAME in .env}
-      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:?Set SEED_ADMIN_PASSWORD in .env}
-    depends_on:
-      postgres: {condition: service_healthy}
-      kafka: {condition: service_started}
-      redis: {condition: service_started}
+      api-gateway: {condition: service_started}
+  api-gateway:
+    build: ./api-gateway
+    ports: ["8080:80"]
+    depends_on: [auth-service, customer-service, sales-service, task-service]
   postgres:
     image: postgres:16-alpine
     environment:

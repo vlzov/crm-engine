@@ -1,3 +1,0 @@
-package com.example.crm.sales;
-import jakarta.persistence.*; import lombok.*; import java.math.BigDecimal; import java.time.Instant; import java.util.UUID;
-@Entity @Getter @Setter @NoArgsConstructor public class Deal { @Id @GeneratedValue(strategy=GenerationType.UUID) UUID id; @Column(nullable=false) String title; BigDecimal amount; @Enumerated(EnumType.STRING) Stage stage=Stage.NEW; UUID customerId; @Column(nullable=false,updatable=false) Instant createdAt; @PrePersist void init(){createdAt=Instant.now();} public Deal(String title,BigDecimal amount,UUID customerId){this.title=title;this.amount=amount;this.customerId=customerId;} public enum Stage{NEW,QUALIFICATION,PROPOSAL,NEGOTIATION,WON,LOST} }
