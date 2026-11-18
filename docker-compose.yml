@@ -13,6 +13,13 @@ services:
       DB_PASSWORD: crm
       RABBITMQ_HOST: rabbitmq
       REDIS_HOST: redis
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env before starting}
+      SEED_CLIENT_USERNAME: ${SEED_CLIENT_USERNAME:?Set SEED_CLIENT_USERNAME in .env}
+      SEED_CLIENT_PASSWORD: ${SEED_CLIENT_PASSWORD:?Set SEED_CLIENT_PASSWORD in .env}
+      SEED_OPERATOR_USERNAME: ${SEED_OPERATOR_USERNAME:?Set SEED_OPERATOR_USERNAME in .env}
+      SEED_OPERATOR_PASSWORD: ${SEED_OPERATOR_PASSWORD:?Set SEED_OPERATOR_PASSWORD in .env}
+      SEED_ADMIN_USERNAME: ${SEED_ADMIN_USERNAME:?Set SEED_ADMIN_USERNAME in .env}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:?Set SEED_ADMIN_PASSWORD in .env}
     depends_on:
       postgres: {condition: service_healthy}
       rabbitmq: {condition: service_started}
