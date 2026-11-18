@@ -1,0 +1,1 @@
+package com.example.crm.auth; import org.springframework.kafka.core.KafkaTemplate; import org.springframework.stereotype.Component; @Component public class DomainEventPublisher { private final KafkaTemplate<String,String> kafka; public DomainEventPublisher(KafkaTemplate<String,String> k){kafka=k;} public void publish(String type,String id){kafka.send("crm.events",type+":"+id);} }
