@@ -8,8 +8,8 @@ spring:
     hibernate.ddl-auto: update
     open-in-view: false
   flyway.enabled: false
-  rabbitmq:
-    host: ${RABBITMQ_HOST:localhost}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
   data.redis:
     host: ${REDIS_HOST:localhost}
 management.endpoints.web.exposure.include: health,info
