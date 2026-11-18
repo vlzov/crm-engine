@@ -1,5 +1,6 @@
 const $=s=>document.querySelector(s);const content=$('#content');let view='dashboard';let data={customers:[],deals:[],tasks:[]};
-async function api(path,opts){const r=await fetch('/api'+path,opts);if(!r.ok)throw Error(await r.text());return r.status===204?null:r.json()}
+const API_AUTH='Basic '+btoa('operator:operator123');
+async function api(path,opts={}){opts.headers={...(opts.headers||{}),Authorization:API_AUTH};const r=await fetch('/api'+path,opts);if(!r.ok)throw Error(await r.text());return r.status===204?null:r.json()}
 async function load(){try{[data.customers,data.deals,data.tasks]=await Promise.all([api('/customers'),api('/deals'),api('/tasks')]);render()}catch(e){content.innerHTML=`<div class="error">Не удалось загрузить API. Проверьте backend: ${e.message}</div>`}}
 function table(rows,headers,cells){if(!rows.length)return '<div class="empty">Пока нет записей</div>';return `<table class="table"><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(cells).join('')}</tbody></table>`}
 function render(){document.querySelectorAll('.nav').forEach(x=>x.classList.toggle('active',x.dataset.view===view));$('#title').textContent={dashboard:'Обзор',customers:'Клиенты',deals:'Сделки',tasks:'Задачи'}[view];if(view==='dashboard')return dashboard();if(view==='customers')return customers();if(view==='deals')return deals();tasks()}
