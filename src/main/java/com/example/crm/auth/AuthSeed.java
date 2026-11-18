@@ -1,0 +1,2 @@
+package com.example.crm.auth; import org.springframework.boot.CommandLineRunner; import org.springframework.context.annotation.*; import org.springframework.security.crypto.password.PasswordEncoder;
+@Configuration public class AuthSeed { @Bean CommandLineRunner seed(UserRepository r,PasswordEncoder e){return a->{if(r.count()==0){r.save(new UserAccount("client",e.encode("client123"),Role.CLIENT));r.save(new UserAccount("operator",e.encode("operator123"),Role.OPERATOR));r.save(new UserAccount("admin",e.encode("admin123"),Role.ADMIN));}};} }
