@@ -1,4 +1,24 @@
 services:
+  auth-service:
+    build: ./services/auth-service
+    environment: {KAFKA_BOOTSTRAP_SERVERS: kafka:9092, PORT: 8080}
+    ports: ["8081:8080"]
+    depends_on: {kafka: {condition: service_started}}
+  customer-service:
+    build: ./services/customer-service
+    environment: {KAFKA_BOOTSTRAP_SERVERS: kafka:9092, PORT: 8080}
+    ports: ["8082:8080"]
+    depends_on: {kafka: {condition: service_started}}
+  sales-service:
+    build: ./services/sales-service
+    environment: {KAFKA_BOOTSTRAP_SERVERS: kafka:9092, PORT: 8080}
+    ports: ["8083:8080"]
+    depends_on: {kafka: {condition: service_started}}
+  task-service:
+    build: ./services/task-service
+    environment: {KAFKA_BOOTSTRAP_SERVERS: kafka:9092, PORT: 8080}
+    ports: ["8084:8080"]
+    depends_on: {kafka: {condition: service_started}}
   frontend:
     build: ./frontend
     ports: ["3000:80"]
@@ -34,7 +54,7 @@ services:
     volumes: [crm-data:/var/lib/postgresql/data]
     healthcheck: {test: ["CMD-SHELL", "pg_isready -U crm -d crm"], interval: 5s, timeout: 5s, retries: 10}
   kafka:
-    image: bitnami/kafka:3.8
+    image: apache/kafka:3.8.1
     environment:
       KAFKA_CFG_NODE_ID: 1
       KAFKA_CFG_PROCESS_ROLES: broker,controller
