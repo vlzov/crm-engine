@@ -1,0 +1,35 @@
+services:
+  frontend:
+    build: ./frontend
+    ports: ["3000:80"]
+    depends_on:
+      app: {condition: service_started}
+  app:
+    build: .
+    ports: ["8080:8080"]
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/crm
+      DB_USER: crm
+      DB_PASSWORD: crm
+      RABBITMQ_HOST: rabbitmq
+      REDIS_HOST: redis
+    depends_on:
+      postgres: {condition: service_healthy}
+      rabbitmq: {condition: service_started}
+      redis: {condition: service_started}
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: crm
+      POSTGRES_USER: crm
+      POSTGRES_PASSWORD: crm
+    ports: ["5432:5432"]
+    volumes: [crm-data:/var/lib/postgresql/data]
+    healthcheck: {test: ["CMD-SHELL", "pg_isready -U crm -d crm"], interval: 5s, timeout: 5s, retries: 10}
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports: ["5672:5672", "15672:15672"]
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+volumes: {crm-data: {}}
