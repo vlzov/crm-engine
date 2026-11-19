@@ -52,7 +52,7 @@ Seed-аккаунты для проверки ролей берутся из `.e
 
 ## Service layout
 
-Backend is organized under `services/`: `crm-service` is the running transitional API, while `auth-service`, `customer-service`, `sales-service` and `task-service` have independent `pom.xml` and `src` roots and are ready to receive their bounded contexts incrementally. PostgreSQL remains the source of truth; Redis is reserved for cache/session data and Kafka is the event backbone.
+Backend is organized under `services/`: `auth-service`, `customer-service`, `sales-service` and `task-service` are independent services with their own `pom.xml`, `src` and PostgreSQL database. `api-gateway` is the single frontend entry point. PostgreSQL remains the source of truth; Redis is reserved for cache/session data and Kafka is the event backbone.
 
 RabbitMQ is not used in the current stack. Kafka is preferable here because CRM events (deal changes, task events, audit records) benefit from durable topics, consumer groups and replay. Redis handles low-latency cache and short-lived data; PostgreSQL owns transactional CRM data.
 
