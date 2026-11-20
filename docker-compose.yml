@@ -21,24 +21,39 @@ services:
   customer-service:
     restart: unless-stopped
     build: ./services/customer-service
-    environment: {JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}, KAFKA_BOOTSTRAP_SERVERS: kafka:9092, DB_URL: jdbc:postgresql://postgres:5432/crm_customer, DB_USER: crm, DB_PASSWORD: crm, PORT: 8080}
-    ports: ["8082:8080"]
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      DB_URL: jdbc:postgresql://postgres:5432/crm_customer
+      DB_USER: crm
+      DB_PASSWORD: crm
+      PORT: 8080
     depends_on:
       kafka: {condition: service_started}
       postgres: {condition: service_healthy}
   sales-service:
     restart: unless-stopped
     build: ./services/sales-service
-    environment: {JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}, KAFKA_BOOTSTRAP_SERVERS: kafka:9092, DB_URL: jdbc:postgresql://postgres:5432/crm_sales, DB_USER: crm, DB_PASSWORD: crm, PORT: 8080}
-    ports: ["8083:8080"]
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      DB_URL: jdbc:postgresql://postgres:5432/crm_sales
+      DB_USER: crm
+      DB_PASSWORD: crm
+      PORT: 8080
     depends_on:
       kafka: {condition: service_started}
       postgres: {condition: service_healthy}
   task-service:
     restart: unless-stopped
     build: ./services/task-service
-    environment: {JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}, KAFKA_BOOTSTRAP_SERVERS: kafka:9092, DB_URL: jdbc:postgresql://postgres:5432/crm_task, DB_USER: crm, DB_PASSWORD: crm, PORT: 8080}
-    ports: ["8084:8080"]
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      DB_URL: jdbc:postgresql://postgres:5432/crm_task
+      DB_USER: crm
+      DB_PASSWORD: crm
+      PORT: 8080
     depends_on:
       kafka: {condition: service_started}
       postgres: {condition: service_healthy}
