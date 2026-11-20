@@ -15,14 +15,13 @@ services:
       SEED_OPERATOR_PASSWORD: ${SEED_OPERATOR_PASSWORD:?Set seed vars}
       SEED_ADMIN_USERNAME: ${SEED_ADMIN_USERNAME:?Set seed vars}
       SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:?Set seed vars}
-    ports: ["8081:8080"]
     depends_on:
       kafka: {condition: service_started}
       postgres: {condition: service_healthy}
   customer-service:
     restart: unless-stopped
     build: ./services/customer-service
-    environment: {KAFKA_BOOTSTRAP_SERVERS: kafka:9092, DB_URL: jdbc:postgresql://postgres:5432/crm_customer, DB_USER: crm, DB_PASSWORD: crm, PORT: 8080}
+    environment: {JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}, KAFKA_BOOTSTRAP_SERVERS: kafka:9092, DB_URL: jdbc:postgresql://postgres:5432/crm_customer, DB_USER: crm, DB_PASSWORD: crm, PORT: 8080}
     ports: ["8082:8080"]
     depends_on:
       kafka: {condition: service_started}
@@ -30,7 +29,7 @@ services:
   sales-service:
     restart: unless-stopped
     build: ./services/sales-service
-    environment: {KAFKA_BOOTSTRAP_SERVERS: kafka:9092, DB_URL: jdbc:postgresql://postgres:5432/crm_sales, DB_USER: crm, DB_PASSWORD: crm, PORT: 8080}
+    environment: {JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}, KAFKA_BOOTSTRAP_SERVERS: kafka:9092, DB_URL: jdbc:postgresql://postgres:5432/crm_sales, DB_USER: crm, DB_PASSWORD: crm, PORT: 8080}
     ports: ["8083:8080"]
     depends_on:
       kafka: {condition: service_started}
@@ -38,7 +37,7 @@ services:
   task-service:
     restart: unless-stopped
     build: ./services/task-service
-    environment: {KAFKA_BOOTSTRAP_SERVERS: kafka:9092, DB_URL: jdbc:postgresql://postgres:5432/crm_task, DB_USER: crm, DB_PASSWORD: crm, PORT: 8080}
+    environment: {JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}, KAFKA_BOOTSTRAP_SERVERS: kafka:9092, DB_URL: jdbc:postgresql://postgres:5432/crm_task, DB_USER: crm, DB_PASSWORD: crm, PORT: 8080}
     ports: ["8084:8080"]
     depends_on:
       kafka: {condition: service_started}

@@ -1,0 +1,3 @@
+package com.example.crm.task;
+import org.springframework.http.*; import org.springframework.web.bind.annotation.*; import java.time.Instant; import java.util.*;
+@RestControllerAdvice public class ApiErrorHandler { @ExceptionHandler(NoSuchElementException.class) ResponseEntity<Map<String,Object>> notFound(Exception e){return ResponseEntity.status(404).body(Map.of("timestamp",Instant.now().toString(),"status",404,"error","NOT_FOUND","message",e.getMessage()==null?"Resource not found":e.getMessage()));} @ExceptionHandler(Exception.class) ResponseEntity<Map<String,Object>> generic(Exception e){return ResponseEntity.status(500).body(Map.of("timestamp",Instant.now().toString(),"status",500,"error","INTERNAL_ERROR","message","Unexpected server error"));} }
