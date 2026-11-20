@@ -1,0 +1,2 @@
+create table if not exists users (id uuid primary key, username varchar(255) not null unique, password_hash varchar(255) not null, role varchar(32) not null, enabled boolean not null);
+create table if not exists refresh_token (id uuid primary key, token varchar(255) not null unique, user_id uuid not null references users(id), expires_at timestamp with time zone not null, revoked boolean not null);

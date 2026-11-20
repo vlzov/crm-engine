@@ -5,7 +5,7 @@ spring:
     username: ${DB_USER:crm}
     password: ${DB_PASSWORD:crm}
   jpa:
-    hibernate.ddl-auto: update
+    hibernate.ddl-auto: validate
   kafka.bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
 server.port: ${PORT:8080}
 management.endpoints.web.exposure.include: health,info
